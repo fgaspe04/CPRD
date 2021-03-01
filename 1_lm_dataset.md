@@ -1,5 +1,3 @@
-#1_lm_dataset
-
 Input: 
 
   -  patients_outcomes.dta
