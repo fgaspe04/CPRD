@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH -J CPRD
+#SBATCH --time=1:00:00
+#SBATCH -p skylake-himem
+#SBATCH -c 5
+#SBATCH --mail-type=ALL
+#SBATCH --array=40-85:5
+
+#SBATCH -o slurm-%A_%a.out
+#SBATCH -A mrc-bsu-sl2-cpu
+
+. /etc/profile.d/modules.sh                # Leave this line (enables the module command)
+module purge                               # Removes all modules still loaded
+module load rhel7/default-peta4                   # REQUIRED - loads the basic environment
+module load r-3.6.1-gcc-5.4.0-zrytncq
+
+cd "/rds/project/jmmh2/rds-jmmh2-hes_data/electronic_health_records/cprd/DataFiles/analysis/Francesca/code/code_prep/"
+Rscript 1_lm_dataset.R $SLURM_ARRAY_TASK_ID "male"
