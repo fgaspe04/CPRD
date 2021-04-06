@@ -86,7 +86,7 @@ length( which( outcomes$cvd_ind == 0 & outcomes$death_ind == 0 ) )/length(outcom
 
 #keep only the exposures before CVD date 
 exposures_red = exposures_red[, c("patid", "exp_date", "exp_age", "exposure", "original", "scaled")]
-exposures_red_merged = merge( exposures_red, outcomes[ ,c("patid", "d_yob", "cvd_date", "cvd_ind", "gender") ], by = "patid", all.x = TRUE )  
+exposures_red_merged = merge( exposures_red, outcomes[ ,c("patid", "d_yob", "cvd_date", "cvd_ind", "gender", "derivation") ], by = "patid", all.x = TRUE )  
 cvd_exp_cond = ( exposures_red_merged$cvd_date - exposures_red_merged$d_yob )/365.25 > exposures_red_merged$exp_age | is.na( exposures_red_merged$cvd_date )
 
 exposures_red_merged = exposures_red_merged[ which(cvd_exp_cond), ]
@@ -104,19 +104,33 @@ print("here1")
 
 for( var in c("bmi","hdl", "tchol", "sbp") ) 
 {
-  #creating scaled variable
-  ioi_female = which( exposures_red_merged$gender == "Female" & exposures_red_merged$exposure == var )
-  ioi_male = which( exposures_red_merged$gender == "Male" & exposures_red_merged$exposure == var )
+  #creating scaled variable for the derivation set
+  ioi_female_deriv = which( exposures_red_merged$gender == "Female" & exposures_red_merged$exposure == var & exposures_red_merged$derivation == "derivation" )
+  ioi_male_deriv   = which( exposures_red_merged$gender == "Male"   & exposures_red_merged$exposure == var & exposures_red_merged$derivation == "derivation" )
   
-  female_mean = mean( exposures_red_merged[ ioi_female, "original" ] ) 
-  male_mean   = mean( exposures_red_merged[ ioi_male, "original" ] ) 
+  female_mean_deriv = mean( exposures_red_merged[ ioi_female_deriv, "original" ] ) 
+  male_mean_deriv   = mean( exposures_red_merged[ ioi_male_deriv, "original" ] ) 
   
   #overall_sd = sd( exposures_red_merged$original )
-  female_sd = sd( exposures_red_merged[ ioi_female, "original" ] ) 
-  male_sd   = sd( exposures_red_merged[ ioi_male, "original" ] ) 
+  female_sd_deriv = sd( exposures_red_merged[ ioi_female_deriv, "original" ] ) 
+  male_sd_deriv   = sd( exposures_red_merged[ ioi_male_deriv, "original" ] ) 
   
-  exposures_red_merged$scaled_corr[ ioi_female ] = (exposures_red_merged$original[ioi_female] - female_mean)/female_sd
-  exposures_red_merged$scaled_corr[ ioi_male ]   = (exposures_red_merged$original[ioi_male] - male_mean)/male_sd
+  exposures_red_merged$scaled_corr[ ioi_female_deriv ] = (exposures_red_merged$original[ ioi_female_deriv ] - female_mean_deriv)/female_sd_deriv
+  exposures_red_merged$scaled_corr[ ioi_male_deriv ]   = (exposures_red_merged$original[ ioi_male_deriv ] - male_mean_deriv)/male_sd_deriv
+  
+  #creating scaled variable for the validation set
+  ioi_female_valid = which( exposures_red_merged$gender == "Female" & exposures_red_merged$exposure == var & exposures_red_merged$validation == "validation" )
+  ioi_male_valid   = which( exposures_red_merged$gender == "Male"   & exposures_red_merged$exposure == var & exposures_red_merged$validation == "validation" )
+  
+  female_mean_valid = mean( exposures_red_merged[ ioi_female_valid, "original" ] ) 
+  male_mean_valid   = mean( exposures_red_merged[ ioi_male_valid, "original" ] ) 
+  
+  #overall_sd = sd( exposures_red_merged$original )
+  female_sd_valid = sd( exposures_red_merged[ ioi_female_valid, "original" ] ) 
+  male_sd_valid   = sd( exposures_red_merged[ ioi_male_valid, "original" ] ) 
+  
+  exposures_red_merged$scaled_corr[ ioi_female_valid ] = (exposures_red_merged$original[ ioi_female_valid ] - female_mean_valid)/female_sd_valid
+  exposures_red_merged$scaled_corr[ ioi_male_valid ]   = (exposures_red_merged$original[ ioi_male_valid ] - male_mean_valid)/male_sd_valid
 }
 
 # table( exposures_red_merged$original[exposures_red_merged$exposure == "smokbin"] )
