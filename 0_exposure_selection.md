@@ -36,8 +36,10 @@
   
   I select only those measurements that happen before CVD diagnosis (if it happens).
   
-  I create the correct scaled variables folowing this formula:
+  I create the correct scaled variables following this formula:
   
 <img src="https://render.githubusercontent.com/render/math?math=X_f%20%3D%20%5Cfrac%7B(X_f%20-%20%5Cbar%7BX%7D_f)%7D%7Bsd(X_f)%7D%0A">
 
 <img src="https://render.githubusercontent.com/render/math?math=X_m%20%3D%20%5Cfrac%7B(X_m%20-%20%5Cbar%7BX%7D_m)%7D%7Bsd(X_m)%7D%0A">
+
+ REMARK: The scaled variables are computed separately for the derivation and the validation sets.
