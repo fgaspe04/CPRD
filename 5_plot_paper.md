@@ -11,7 +11,7 @@
 **Output**
 
   - optimal risk assessment strategy per person, at each landamrk age
-  - Fugures and Tables of the paper
+  - Figures and Tables of the paper
 
 **Process**
 
