@@ -1,5 +1,6 @@
-
+#Authors of this function: Ruth Keogh and David Stevens
 #ruth.keogh@lshtm.ac.uk
+#david.stevens@liverpool.ac.uk
 #mixoutsamp is a function which gives out-of sampling predictions from a mixed model fitted using lme. 
 #'@param model: this is a mixed model fitted using lme
 #'@param newdata: this is a new data set for which it is desired to make predictions. The columns in the data should have the same names as those used to fit the model. The variables should also be of the same type as in the data used to fit the mixed model (numeric, factor etc)
